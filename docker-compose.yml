@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: bbts_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: bbts
+      POSTGRES_PASSWORD: bbts
+      POSTGRES_DB: bbts
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bbts"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    container_name: bbts_api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://bbts:bbts@db:5432/bbts
+      SECRET_KEY: mude-esta-chave-em-producao
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app   # hot reload em dev
+
+volumes:
+  postgres_data:
