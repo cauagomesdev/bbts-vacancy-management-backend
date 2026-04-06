@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 from app.models import DecisionEnum, VacancyStatus, PriorityEnum
-
+from app.vacancies.schemas import RequirementOut 
 
 class ApproveRequest(BaseModel):
     justification: Optional[str] = None
@@ -31,5 +31,6 @@ class PendingVacancyOut(BaseModel):
     status: VacancyStatus
     requester_id: int
     created_at: datetime
+    requirements: list[RequirementOut] = []
 
     model_config = {"from_attributes": True}
