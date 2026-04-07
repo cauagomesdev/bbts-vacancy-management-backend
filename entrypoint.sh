@@ -11,8 +11,6 @@ echo "✅  PostgreSQL disponível."
 echo "🔄  Rodando migrations..."
 alembic upgrade head
 
-echo "🌱  Rodando seed..."
-python seed.py
 
 echo "🚀  Iniciando API..."
 exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
